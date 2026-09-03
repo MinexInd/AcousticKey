@@ -1,0 +1,10 @@
+{
+  "name": "Default Mouse",
+  "includes_numpad": false,
+  "key_define_type": "individual",
+  "defines": {
+    "0": "left_click.ogg",
+    "1": "right_click.ogg",
+    "2": "middle_click.ogg"
+  }
+}

@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "acoustickey",
+	"version": "${version}",
+	"name": "AcoustiKey",
+		"description": "Mechanical keyboard and mouse sounds for Minecraft.",
+	"authors": [
+		"MinexInd"
+	],
+	"contact": {
+		"homepage": "https://github.com/MinexInd/AcoustiKey",
+		"sources": "https://github.com/MinexInd/AcoustiKey"
+	},
+	"license": "MIT",
+	"icon": "assets/acoustickey/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"minex.acoustickey.AcoustiKey"
+		],
+		"client": [
+			"minex.acoustickey.client.AcoustiKeyClient"
+		]
+	},
+	"mixins": [
+		"acoustickey.mixins.json",
+		{
+			"config": "acoustickey.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
