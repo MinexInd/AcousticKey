@@ -7,15 +7,12 @@ import minex.acoustickey.sound.SoundPackManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class AcoustiKeyClient implements ClientModInitializer {
-	private static final KeyBinding.Category CATEGORY =
-			KeyBinding.Category.create(Identifier.of(AcoustiKey.MOD_ID, "keys"));
+	private static final String CATEGORY = "key.category.acoustickey.keys";
 	private static KeyBinding guiKey;
 	private static KeyBinding muteKey;
 

@@ -60,6 +60,7 @@ public class ScrollablePackList extends ClickableWidget {
 		return Math.max(0, packs.size() * ITEM_HEIGHT - (height - 2));
 	}
 
+	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		if (!isMouseOver(mouseX, mouseY)) {
 			return false;
@@ -70,10 +71,9 @@ public class ScrollablePackList extends ClickableWidget {
 		return true;
 	}
 
-	public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
-		double mouseX = click.x();
-		double mouseY = click.y();
-		if (!isMouseOver(mouseX, mouseY) || click.button() != 0) {
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		if (!isMouseOver(mouseX, mouseY) || button != 0) {
 			return false;
 		}
 		int innerX = (int) mouseX - getX();
