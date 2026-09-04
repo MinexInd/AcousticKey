@@ -45,7 +45,7 @@ public class AcoustiKeyScreen extends Screen {
 	private int panelW;
 
 	public AcoustiKeyScreen(Screen parent) {
-		super(Text.literal("AcoustiKey"));
+		super(Text.literal("AcousticKey"));
 		this.parent = parent;
 		this.config = SoundPackManager.getInstance().getConfig();
 	}
@@ -206,7 +206,7 @@ public class AcoustiKeyScreen extends Screen {
 		int listY = 50;
 
 		ctx.drawCenteredTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7l\u00A7fAcoustiKey"),
+			Text.literal("\u00A7l\u00A7fAcousticKey"),
 			panelX + panelW / 2, 12, 0xFFFFFFFF);
 		ctx.drawCenteredTextWithShadow(this.textRenderer,
 			Text.literal("\u00A77Sound on every keystroke"),
