@@ -2,14 +2,14 @@
 	"schemaVersion": 1,
 	"id": "acoustickey",
 	"version": "${version}",
-	"name": "AcoustiKey",
+	"name": "AcousticKey",
 		"description": "Mechanical keyboard and mouse sounds for Minecraft.",
 	"authors": [
 		"MinexInd"
 	],
 	"contact": {
-		"homepage": "https://github.com/MinexInd/AcoustiKey",
-		"sources": "https://github.com/MinexInd/AcoustiKey"
+		"homepage": "https://github.com/MinexInd/AcousticKey",
+		"sources": "https://github.com/MinexInd/AcousticKey"
 	},
 	"license": "MIT",
 	"icon": "assets/acoustickey/icon.png",
