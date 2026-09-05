@@ -38,8 +38,8 @@ public class AcoustiKeyClient implements ClientModInitializer {
 			if (guiKey.consumeClick()) {
 				// Allow opening settings from any screen (menu, world, etc.) and avoid
 				// stacking duplicate screens on repeated presses.
-				if (client.screen == null || !(client.screen instanceof AcoustiKeyScreen)) {
-					client.setScreen(new AcoustiKeyScreen(client.screen));
+				if (client.gui.screen() == null || !(client.gui.screen() instanceof AcoustiKeyScreen)) {
+					client.gui.setScreen(new AcoustiKeyScreen(client.gui.screen()));
 				}
 			}
 			if (muteKey.consumeClick()) {

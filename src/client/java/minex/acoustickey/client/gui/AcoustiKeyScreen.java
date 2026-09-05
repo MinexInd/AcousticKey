@@ -186,9 +186,11 @@ public class AcoustiKeyScreen extends Screen {
 			// Use Minecraft's own folder-opening mechanism so it opens in the file manager.
 			Util.getPlatform().openPath(kbDir);
 		} catch (IOException e) {
-			Minecraft.getInstance().gui.setOverlayMessage(
-				Component.literal("Could not open folder"), false
-			);
+			if (Minecraft.getInstance().player != null) {
+				Minecraft.getInstance().player.sendSystemMessage(
+					Component.literal("Could not open folder")
+				);
+			}
 		}
 	}
 
@@ -248,7 +250,7 @@ public class AcoustiKeyScreen extends Screen {
 	@Override
 	public void onClose() {
 		if (this.minecraft != null) {
-			this.minecraft.setScreen(parent);
+			this.minecraft.gui.setScreen(parent);
 		}
 	}
 }
