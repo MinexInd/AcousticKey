@@ -6,7 +6,7 @@ import minex.acoustickey.config.AcoustiKeyConfig;
 import minex.acoustickey.sound.SoundPackManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -15,7 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class AcoustiKeyClient implements ClientModInitializer {
 	private static final KeyMapping.Category CATEGORY =
-			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(AcoustiKey.MOD_ID, "keys"));
+			new KeyMapping.Category(Identifier.fromNamespaceAndPath(AcoustiKey.MOD_ID, "keys"));
 	private static KeyMapping guiKey;
 	private static KeyMapping muteKey;
 
@@ -27,10 +27,10 @@ public class AcoustiKeyClient implements ClientModInitializer {
 		AcoustiKeyConfig config = AcoustiKeyConfig.load();
 		SoundPackManager.getInstance().init(config);
 
-		guiKey = KeyBindingHelper.registerKeyBinding(
+		guiKey = KeyMappingHelper.registerKeyMapping(
 			new KeyMapping("key.acoustickey.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY)
 		);
-		muteKey = KeyBindingHelper.registerKeyBinding(
+		muteKey = KeyMappingHelper.registerKeyMapping(
 			new KeyMapping("key.acoustickey.mute", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_M, CATEGORY)
 		);
 

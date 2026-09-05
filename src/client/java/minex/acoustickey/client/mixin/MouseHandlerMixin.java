@@ -18,9 +18,9 @@ public class MouseHandlerMixin {
 
 		SoundPackManager manager = SoundPackManager.getInstance();
 		if (action == 1) {
-			manager.playMouseDown(input.button());
+			manager.playMouseDown(input.input());
 		} else if (action == 0) {
-			manager.playMouseUp(input.button());
+			manager.playMouseUp(input.input());
 		}
 	}
 }

@@ -2,7 +2,7 @@ package minex.acoustickey.client.gui.widgets;
 
 import minex.acoustickey.sound.SoundPack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
@@ -88,7 +88,7 @@ public class ScrollablePackList extends AbstractWidget {
 	}
 
 	@Override
-	protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+	protected void extractWidgetRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
 		int x = getX();
 		int y = getY();
 		int w = getWidth();
@@ -129,7 +129,7 @@ public class ScrollablePackList extends AbstractWidget {
 		context.fill(x + w - 1, y, x + w, y + h, 0xFF333355);
 	}
 
-	private void renderEntry(GuiGraphics context, SoundPack pack, int x, int y, int w, int h,
+	private void renderEntry(GuiGraphicsExtractor context, SoundPack pack, int x, int y, int w, int h,
                              boolean hovered, boolean selected) {
 		if (selected) {
 			context.fill(x + 1, y, x + w - SCROLLBAR_W, y + h, SELECTED_FILL);
@@ -149,13 +149,13 @@ public class ScrollablePackList extends AbstractWidget {
 		int nameY = y + (h - 18) / 2;
 
 		String prefix = selected ? "\u25B6 " : "";
-		context.drawString(Minecraft.getInstance().font,
+		context.text(Minecraft.getInstance().font,
 				Component.literal(prefix + name),
-				textX, nameY, nameColor);
+				textX, nameY, nameColor, true);
 
-		context.drawString(Minecraft.getInstance().font,
+		context.text(Minecraft.getInstance().font,
 				Component.literal(typeTag + " \u00B7 " + defineCount + " keys"),
-				textX, nameY + 11, dimColor);
+				textX, nameY + 11, dimColor, true);
 	}
 
 	@Override

@@ -18,9 +18,9 @@ public class KeyboardHandlerMixin {
 
 		SoundPackManager manager = SoundPackManager.getInstance();
 		if (action == 1) {
-			manager.playKeyDown(input.key());
+			manager.playKeyDown(input.input());
 		} else if (action == 0) {
-			manager.playKeyUp(input.key());
+			manager.playKeyUp(input.input());
 		}
 	}
 }

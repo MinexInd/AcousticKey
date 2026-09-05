@@ -6,7 +6,7 @@ import minex.acoustickey.client.gui.widgets.VolumeSlider;
 import minex.acoustickey.config.AcoustiKeyConfig;
 import minex.acoustickey.sound.SoundPackManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -193,41 +193,41 @@ public class AcoustiKeyScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+	public void extractRenderState(GuiGraphicsExtractor ctx, int mouseX, int mouseY, float delta) {
 		ctx.fill(panelX, 0, panelX + panelW, this.height, PANEL_BG);
 		ctx.fill(panelX, 0, panelX + 1, this.height, PANEL_ACCENT);
 		ctx.fill(panelX + panelW - 1, 0, panelX + panelW, this.height, PANEL_ACCENT);
 
-		super.render(ctx, mouseX, mouseY, delta);
+		super.extractRenderState(ctx, mouseX, mouseY, delta);
 
 		int innerX = panelX + PAD;
 		int innerW = panelW - PAD * 2;
 		int listW = (innerW - GAP) / 2;
 		int listY = 50;
 
-		ctx.drawCenteredString(this.font,
+		ctx.centeredText(this.font,
 			Component.literal("\u00A7l\u00A7fAcousticKey"),
 			panelX + panelW / 2, 12, 0xFFFFFFFF);
-		ctx.drawCenteredString(this.font,
+		ctx.centeredText(this.font,
 			Component.literal("\u00A77Sound on every keystroke"),
 			panelX + panelW / 2, 26, TEXT_DIM);
 
-		ctx.drawString(this.font,
+		ctx.text(this.font,
 			Component.literal("\u00A7bKEYBOARD PACKS"),
-			innerX, listY - 14, TEXT_LABEL);
-		ctx.drawString(this.font,
+			innerX, listY - 14, TEXT_LABEL, true);
+		ctx.text(this.font,
 			Component.literal("\u00A7bMOUSE PACKS"),
-			innerX + listW + GAP, listY - 14, TEXT_LABEL);
+			innerX + listW + GAP, listY - 14, TEXT_LABEL, true);
 
 		int volY = listY + 210 + 30;
-		ctx.drawString(this.font,
+		ctx.text(this.font,
 			Component.literal("\u00A7bVolume"),
-			innerX, volY - 14, TEXT_LABEL);
+			innerX, volY - 14, TEXT_LABEL, true);
 
 		int btnY = volY + 32;
-		ctx.drawString(this.font,
+		ctx.text(this.font,
 			Component.literal("\u00A7bBehavior"),
-			innerX, btnY - 14, TEXT_LABEL);
+			innerX, btnY - 14, TEXT_LABEL, true);
 
 		String kbName = SoundPackManager.getInstance().getCurrentKeyboardPack() != null
 			? SoundPackManager.getInstance().getCurrentKeyboardPack().getDisplayName() : "None";
@@ -235,7 +235,7 @@ public class AcoustiKeyScreen extends Screen {
 			? SoundPackManager.getInstance().getCurrentMousePack().getDisplayName() : "None";
 
 		ctx.fill(panelX + PAD, this.height - 18, panelX + panelW - PAD, this.height - 17, 0x33FFFFFF);
-		ctx.drawCenteredString(this.font,
+		ctx.centeredText(this.font,
 			Component.literal("\u00A77" + bindName(AcoustiKeyClient.getGuiKey(), "K") + " = GUI   \u00A78\u2502   \u00A77" + bindName(AcoustiKeyClient.getMuteKey(), "M") + " = Mute   \u00A78\u2502   \u00A7f" + kbName + " \u00A78\u2502 \u00A7f" + mName),
 			panelX + panelW / 2, this.height - 14, TEXT_DIM);
 	}
