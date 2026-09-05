@@ -133,7 +133,7 @@ Two folders — keyboard packs and mouse packs are kept separate:
 
 ## Installation
 
-**Requires:** `Fabric Loader ≥ 0.19.3` · `Java 21` · `Fabric API`
+**Requires:** `Fabric Loader ≥ 0.19.3` · `Fabric API` · `Java 21` (1.21.x) / `Java 25` (26.x)
 
 1. Install [Fabric Loader](https://fabricmc.net/use/) for your version.
 2. Put `fabric-api-*.jar` in `mods/` (skip if present).
@@ -143,6 +143,8 @@ Two folders — keyboard packs and mouse packs are kept separate:
 |---|---|
 | `acoustickey-*-mc1.21-1.21.8.jar` | 1.21 – 1.21.8 |
 | `acoustickey-*-mc1.21.9-1.21.11.jar` | 1.21.9 – 1.21.11 |
+| `acoustickey-*-mc26.1.jar` | 26.1 – 26.1.2 |
+| `acoustickey-*-mc26.2.jar` | 26.2 |
 
 4. Launch → `Options → Controls → AcousticKey` → set your keys → press `K`.
 
