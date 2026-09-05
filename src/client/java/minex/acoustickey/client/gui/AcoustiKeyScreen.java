@@ -5,11 +5,11 @@ import minex.acoustickey.client.gui.widgets.ScrollablePackList;
 import minex.acoustickey.client.gui.widgets.VolumeSlider;
 import minex.acoustickey.config.AcoustiKeyConfig;
 import minex.acoustickey.sound.SoundPackManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 
 import java.io.IOException;
@@ -36,16 +36,16 @@ public class AcoustiKeyScreen extends Screen {
 	private ScrollablePackList mouseList;
 	private VolumeSlider keyboardVolume;
 	private VolumeSlider mouseVolume;
-	private ButtonWidget muteBtn;
-	private ButtonWidget keyUpBtn;
-	private ButtonWidget mouseBtn;
-	private ButtonWidget randomBtn;
+	private Button muteBtn;
+	private Button keyUpBtn;
+	private Button mouseBtn;
+	private Button randomBtn;
 
 	private int panelX;
 	private int panelW;
 
 	public AcoustiKeyScreen(Screen parent) {
-		super(Text.literal("AcousticKey"));
+		super(Component.literal("AcousticKey"));
 		this.parent = parent;
 		this.config = SoundPackManager.getInstance().getConfig();
 	}
@@ -68,7 +68,7 @@ public class AcoustiKeyScreen extends Screen {
 			SoundPackManager.getInstance().getCurrentKeyboardPack(),
 			pack -> SoundPackManager.getInstance().setCurrentKeyboardPack(pack)
 		);
-		this.addDrawableChild(keyboardList);
+		this.addRenderableWidget(keyboardList);
 
 		mouseList = new ScrollablePackList(
 			innerX + listW + GAP, listY, listW, listH,
@@ -76,7 +76,7 @@ public class AcoustiKeyScreen extends Screen {
 			SoundPackManager.getInstance().getCurrentMousePack(),
 			pack -> SoundPackManager.getInstance().setCurrentMousePack(pack)
 		);
-		this.addDrawableChild(mouseList);
+		this.addRenderableWidget(mouseList);
 
 		int volY = listY + listH + 30;
 		int volW = listW - 80;
@@ -85,67 +85,67 @@ public class AcoustiKeyScreen extends Screen {
 				config.keyboardVolume = val;
 				config.save();
 			});
-		this.addDrawableChild(keyboardVolume);
+		this.addRenderableWidget(keyboardVolume);
 
 		mouseVolume = new VolumeSlider(innerX + listW + GAP + 80, volY, volW, 18,
 			"Mouse", config.mouseVolume, val -> {
 				config.mouseVolume = val;
 				config.save();
 			});
-		this.addDrawableChild(mouseVolume);
+		this.addRenderableWidget(mouseVolume);
 
 		int btnY = volY + 32;
 		int btnW = (listW - 4) / 2;
 		int btnH = 22;
 
-		muteBtn = ButtonWidget.builder(toggleLabel("Mute", config.muted), btn -> {
+		muteBtn = Button.builder(toggleLabel("Mute", config.muted), btn -> {
 			config.muted = !config.muted;
 			config.save();
 			btn.setMessage(toggleLabel("Mute", config.muted));
-		}).position(innerX, btnY).size(btnW, btnH).build();
-		this.addDrawableChild(muteBtn);
+		}).pos(innerX, btnY).size(btnW, btnH).build();
+		this.addRenderableWidget(muteBtn);
 
-		keyUpBtn = ButtonWidget.builder(toggleLabel("Key-Up", config.keyUpEnabled), btn -> {
+		keyUpBtn = Button.builder(toggleLabel("Key-Up", config.keyUpEnabled), btn -> {
 			config.keyUpEnabled = !config.keyUpEnabled;
 			config.save();
 			btn.setMessage(toggleLabel("Key-Up", config.keyUpEnabled));
-		}).position(innerX + btnW + 4, btnY).size(btnW, btnH).build();
-		this.addDrawableChild(keyUpBtn);
+		}).pos(innerX + btnW + 4, btnY).size(btnW, btnH).build();
+		this.addRenderableWidget(keyUpBtn);
 
-		mouseBtn = ButtonWidget.builder(toggleLabel("Mouse", config.mouseSoundsEnabled), btn -> {
+		mouseBtn = Button.builder(toggleLabel("Mouse", config.mouseSoundsEnabled), btn -> {
 			config.mouseSoundsEnabled = !config.mouseSoundsEnabled;
 			config.save();
 			btn.setMessage(toggleLabel("Mouse", config.mouseSoundsEnabled));
-		}).position(innerX + listW + GAP, btnY).size(btnW, btnH).build();
-		this.addDrawableChild(mouseBtn);
+		}).pos(innerX + listW + GAP, btnY).size(btnW, btnH).build();
+		this.addRenderableWidget(mouseBtn);
 
-		randomBtn = ButtonWidget.builder(toggleLabel("Random", config.randomSoundsEnabled), btn -> {
+		randomBtn = Button.builder(toggleLabel("Random", config.randomSoundsEnabled), btn -> {
 			config.randomSoundsEnabled = !config.randomSoundsEnabled;
 			config.save();
 			btn.setMessage(toggleLabel("Random", config.randomSoundsEnabled));
-		}).position(innerX + listW + GAP + btnW + 4, btnY).size(btnW, btnH).build();
-		this.addDrawableChild(randomBtn);
+		}).pos(innerX + listW + GAP + btnW + 4, btnY).size(btnW, btnH).build();
+		this.addRenderableWidget(randomBtn);
 
 		int footerY = this.height - 50;
 		int footBtnW = 88;
-		this.addDrawableChild(ButtonWidget.builder(Text.literal("Refresh"), btn -> {
+		this.addRenderableWidget(Button.builder(Component.literal("Refresh"), btn -> {
 			SoundPackManager.getInstance().reloadPacks();
 			this.refreshLists();
-		}).position(innerX, footerY).size(footBtnW, 22).build());
+		}).pos(innerX, footerY).size(footBtnW, 22).build());
 
-		this.addDrawableChild(ButtonWidget.builder(Text.literal("Open Folder"), btn -> {
+		this.addRenderableWidget(Button.builder(Component.literal("Open Folder"), btn -> {
 			openSoundpackFolder();
-		}).position(innerX + footBtnW + 6, footerY).size(footBtnW + 30, 22).build());
+		}).pos(innerX + footBtnW + 6, footerY).size(footBtnW + 30, 22).build());
 
-		this.addDrawableChild(ButtonWidget.builder(Text.literal("Done"), btn -> this.close())
-			.position(panelX + panelW - PAD - footBtnW, footerY)
+		this.addRenderableWidget(Button.builder(Component.literal("Done"), btn -> this.onClose())
+			.pos(panelX + panelW - PAD - footBtnW, footerY)
 			.size(footBtnW, 22)
 			.build());
 	}
 
 	private void refreshLists() {
-		this.remove(keyboardList);
-		this.remove(mouseList);
+		this.removeWidget(keyboardList);
+		this.removeWidget(mouseList);
 		int innerX = panelX + PAD;
 		int innerW = panelW - PAD * 2;
 		int listW = (innerW - GAP) / 2;
@@ -158,7 +158,7 @@ public class AcoustiKeyScreen extends Screen {
 			SoundPackManager.getInstance().getCurrentKeyboardPack(),
 			pack -> SoundPackManager.getInstance().setCurrentKeyboardPack(pack)
 		);
-		this.addDrawableChild(keyboardList);
+		this.addRenderableWidget(keyboardList);
 
 		mouseList = new ScrollablePackList(
 			innerX + listW + GAP, listY, listW, listH,
@@ -166,34 +166,34 @@ public class AcoustiKeyScreen extends Screen {
 			SoundPackManager.getInstance().getCurrentMousePack(),
 			pack -> SoundPackManager.getInstance().setCurrentMousePack(pack)
 		);
-		this.addDrawableChild(mouseList);
+		this.addRenderableWidget(mouseList);
 	}
 
-	private static String bindName(net.minecraft.client.option.KeyBinding key, String fallback) {
-		return key != null ? key.getBoundKeyLocalizedText().getString() : fallback;
+	private static String bindName(net.minecraft.client.KeyMapping key, String fallback) {
+		return key != null ? key.getTranslatedKeyMessage().getString() : fallback;
 	}
 
-	private static Text toggleLabel(String name, boolean on) {
+	private static Component toggleLabel(String name, boolean on) {
 		String state = on ? "\u00A7aON" : "\u00A7cOFF";
-		return Text.literal(name + ": " + state);
+		return Component.literal(name + ": " + state);
 	}
 
 	private void openSoundpackFolder() {
-		Path kbDir = MinecraftClient.getInstance().runDirectory.toPath()
+		Path kbDir = Minecraft.getInstance().gameDirectory.toPath()
 					.resolve("config/acoustickey/soundpacks");
 		try {
 			Files.createDirectories(kbDir);
 			// Use Minecraft's own folder-opening mechanism so it opens in the file manager.
-			Util.getOperatingSystem().open(kbDir);
+			Util.getPlatform().openPath(kbDir);
 		} catch (IOException e) {
-			MinecraftClient.getInstance().inGameHud.setOverlayMessage(
-				Text.literal("Could not open folder"), false
+			Minecraft.getInstance().gui.setOverlayMessage(
+				Component.literal("Could not open folder"), false
 			);
 		}
 	}
 
 	@Override
-	public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
+	public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
 		ctx.fill(panelX, 0, panelX + panelW, this.height, PANEL_BG);
 		ctx.fill(panelX, 0, panelX + 1, this.height, PANEL_ACCENT);
 		ctx.fill(panelX + panelW - 1, 0, panelX + panelW, this.height, PANEL_ACCENT);
@@ -205,28 +205,28 @@ public class AcoustiKeyScreen extends Screen {
 		int listW = (innerW - GAP) / 2;
 		int listY = 50;
 
-		ctx.drawCenteredTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7l\u00A7fAcousticKey"),
+		ctx.drawCenteredString(this.font,
+			Component.literal("\u00A7l\u00A7fAcousticKey"),
 			panelX + panelW / 2, 12, 0xFFFFFFFF);
-		ctx.drawCenteredTextWithShadow(this.textRenderer,
-			Text.literal("\u00A77Sound on every keystroke"),
+		ctx.drawCenteredString(this.font,
+			Component.literal("\u00A77Sound on every keystroke"),
 			panelX + panelW / 2, 26, TEXT_DIM);
 
-		ctx.drawTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7bKEYBOARD PACKS"),
+		ctx.drawString(this.font,
+			Component.literal("\u00A7bKEYBOARD PACKS"),
 			innerX, listY - 14, TEXT_LABEL);
-		ctx.drawTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7bMOUSE PACKS"),
+		ctx.drawString(this.font,
+			Component.literal("\u00A7bMOUSE PACKS"),
 			innerX + listW + GAP, listY - 14, TEXT_LABEL);
 
 		int volY = listY + 210 + 30;
-		ctx.drawTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7bVolume"),
+		ctx.drawString(this.font,
+			Component.literal("\u00A7bVolume"),
 			innerX, volY - 14, TEXT_LABEL);
 
 		int btnY = volY + 32;
-		ctx.drawTextWithShadow(this.textRenderer,
-			Text.literal("\u00A7bBehavior"),
+		ctx.drawString(this.font,
+			Component.literal("\u00A7bBehavior"),
 			innerX, btnY - 14, TEXT_LABEL);
 
 		String kbName = SoundPackManager.getInstance().getCurrentKeyboardPack() != null
@@ -235,20 +235,20 @@ public class AcoustiKeyScreen extends Screen {
 			? SoundPackManager.getInstance().getCurrentMousePack().getDisplayName() : "None";
 
 		ctx.fill(panelX + PAD, this.height - 18, panelX + panelW - PAD, this.height - 17, 0x33FFFFFF);
-		ctx.drawCenteredTextWithShadow(this.textRenderer,
-			Text.literal("\u00A77" + bindName(AcoustiKeyClient.getGuiKey(), "K") + " = GUI   \u00A78\u2502   \u00A77" + bindName(AcoustiKeyClient.getMuteKey(), "M") + " = Mute   \u00A78\u2502   \u00A7f" + kbName + " \u00A78\u2502 \u00A7f" + mName),
+		ctx.drawCenteredString(this.font,
+			Component.literal("\u00A77" + bindName(AcoustiKeyClient.getGuiKey(), "K") + " = GUI   \u00A78\u2502   \u00A77" + bindName(AcoustiKeyClient.getMuteKey(), "M") + " = Mute   \u00A78\u2502   \u00A7f" + kbName + " \u00A78\u2502 \u00A7f" + mName),
 			panelX + panelW / 2, this.height - 14, TEXT_DIM);
 	}
 
 	@Override
-	public boolean shouldPause() {
+	public boolean isPauseScreen() {
 		return false;
 	}
 
 	@Override
-	public void close() {
-		if (this.client != null) {
-			this.client.setScreen(parent);
+	public void onClose() {
+		if (this.minecraft != null) {
+			this.minecraft.setScreen(parent);
 		}
 	}
 }

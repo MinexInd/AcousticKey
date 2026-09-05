@@ -2,9 +2,9 @@
 	"required": true,
 	"package": "minex.acoustickey.client.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"KeyboardMixin",
-		"MouseMixin"
+	"mixins": [
+      "KeyboardHandlerMixin",
+      "MouseHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

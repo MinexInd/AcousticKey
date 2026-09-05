@@ -1,15 +1,15 @@
 package minex.acoustickey.client.gui.widgets;
 
 import minex.acoustickey.sound.SoundPack;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ScrollablePackList extends ClickableWidget {
+public class ScrollablePackList extends AbstractWidget {
 	private static final int ITEM_HEIGHT = 30;
 	private static final int SCROLLBAR_W = 6;
 	private static final int ITEM_PAD = 10;
@@ -31,7 +31,7 @@ public class ScrollablePackList extends ClickableWidget {
 
 	public ScrollablePackList(int x, int y, int width, int height,
 				List<SoundPack> packs, SoundPack selected, Consumer<SoundPack> onSelect) {
-		super(x, y, width, height, Text.empty());
+		super(x, y, width, height, Component.empty());
 		this.packs = packs;
 		this.selected = selected;
 		this.onSelect = onSelect;
@@ -70,7 +70,7 @@ public class ScrollablePackList extends ClickableWidget {
 		return true;
 	}
 
-	public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
+	public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent click, boolean doubled) {
 		double mouseX = click.x();
 		double mouseY = click.y();
 		if (!isMouseOver(mouseX, mouseY) || click.button() != 0) {
@@ -88,7 +88,7 @@ public class ScrollablePackList extends ClickableWidget {
 	}
 
 	@Override
-	protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+	protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
 		int x = getX();
 		int y = getY();
 		int w = getWidth();
@@ -129,8 +129,8 @@ public class ScrollablePackList extends ClickableWidget {
 		context.fill(x + w - 1, y, x + w, y + h, 0xFF333355);
 	}
 
-	private void renderEntry(DrawContext context, SoundPack pack, int x, int y, int w, int h,
-				boolean hovered, boolean selected) {
+	private void renderEntry(GuiGraphics context, SoundPack pack, int x, int y, int w, int h,
+                             boolean hovered, boolean selected) {
 		if (selected) {
 			context.fill(x + 1, y, x + w - SCROLLBAR_W, y + h, SELECTED_FILL);
 			context.fill(x + 1, y, x + 4, y + h, SELECTED_BAR);
@@ -149,20 +149,20 @@ public class ScrollablePackList extends ClickableWidget {
 		int nameY = y + (h - 18) / 2;
 
 		String prefix = selected ? "\u25B6 " : "";
-		context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer,
-				Text.literal(prefix + name),
+		context.drawString(Minecraft.getInstance().font,
+				Component.literal(prefix + name),
 				textX, nameY, nameColor);
 
-		context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer,
-				Text.literal(typeTag + " \u00B7 " + defineCount + " keys"),
+		context.drawString(Minecraft.getInstance().font,
+				Component.literal(typeTag + " \u00B7 " + defineCount + " keys"),
 				textX, nameY + 11, dimColor);
 	}
 
 	@Override
-	protected void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
+	protected void updateWidgetNarration(net.minecraft.client.gui.narration.NarrationElementOutput builder) {
 		if (selected != null) {
-			builder.put(net.minecraft.client.gui.screen.narration.NarrationPart.TITLE,
-					Text.literal(selected.getDisplayName()));
+			builder.add(net.minecraft.client.gui.narration.NarratedElementType.TITLE,
+					Component.literal(selected.getDisplayName()));
 		}
 	}
 }
