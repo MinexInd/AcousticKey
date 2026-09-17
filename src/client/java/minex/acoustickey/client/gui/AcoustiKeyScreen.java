@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
+import com.mojang.blaze3d.Blaze3D;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -184,12 +184,11 @@ public class AcoustiKeyScreen extends Screen {
 		try {
 			Files.createDirectories(kbDir);
 			// Use Minecraft's own folder-opening mechanism so it opens in the file manager.
-			Util.getPlatform().openPath(kbDir);
+			Blaze3D.openPath(kbDir);
 		} catch (IOException e) {
-			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.sendSystemMessage(
-					Component.literal("Could not open folder")
-				);
+			Minecraft mc = Minecraft.getInstance();
+			if (mc.player != null) {
+				mc.player.sendSystemMessage(Component.literal("Could not open folder"));
 			}
 		}
 	}

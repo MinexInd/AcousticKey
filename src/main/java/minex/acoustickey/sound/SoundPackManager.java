@@ -132,9 +132,27 @@ public class SoundPackManager {
 	// use 1=left/2=right/3=middle and a leading "0" for the release (e.g. "01").
 	// Falls back to the raw button code for legacy packs that use "0"/"1"/"2".
 	private java.util.List<String> mouseKeyCandidates(int button, boolean release) {
-		int mechVibesCode = button + 1;
+		int mechVibesCode;
+		int legacyCode;
+		if (button == 1) { // 26.x MOUSE_BUTTON_LEFT
+			mechVibesCode = 1;
+			legacyCode = 0;
+		} else if (button == 3) { // 26.x MOUSE_BUTTON_RIGHT
+			mechVibesCode = 2;
+			legacyCode = 1;
+		} else if (button == 2) { // 26.x MOUSE_BUTTON_MIDDLE
+			mechVibesCode = 3;
+			legacyCode = 2;
+		} else if (button == 0) { // legacy 0-based left click
+			mechVibesCode = 1;
+			legacyCode = 0;
+		} else {
+			mechVibesCode = button;
+			legacyCode = button - 1;
+		}
 		java.util.List<String> candidates = new java.util.ArrayList<>();
 		candidates.add(release ? "0" + mechVibesCode : String.valueOf(mechVibesCode));
+		candidates.add(String.valueOf(legacyCode));
 		candidates.add(String.valueOf(button));
 		return candidates;
 	}

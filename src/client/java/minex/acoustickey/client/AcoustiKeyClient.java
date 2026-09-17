@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 public class AcoustiKeyClient implements ClientModInitializer {
 	private static final KeyMapping.Category CATEGORY =
@@ -28,10 +27,10 @@ public class AcoustiKeyClient implements ClientModInitializer {
 		SoundPackManager.getInstance().init(config);
 
 		guiKey = KeyMappingHelper.registerKeyMapping(
-			new KeyMapping("key.acoustickey.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY)
+			new KeyMapping("key.acoustickey.gui", InputConstants.Type.KEYBOARD, InputConstants.KEY_K, CATEGORY)
 		);
 		muteKey = KeyMappingHelper.registerKeyMapping(
-			new KeyMapping("key.acoustickey.mute", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_M, CATEGORY)
+			new KeyMapping("key.acoustickey.mute", InputConstants.Type.KEYBOARD, InputConstants.KEY_M, CATEGORY)
 		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {

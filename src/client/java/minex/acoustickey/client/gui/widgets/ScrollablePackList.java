@@ -18,6 +18,7 @@ public class ScrollablePackList extends AbstractWidget {
 	private final Consumer<SoundPack> onSelect;
 	private int scrollOffset = 0;
 	private SoundPack selected;
+	private boolean isScrolling = false;
 
 	private static final int BG = 0xFF141420;
 	private static final int SCROLLBAR_BG = 0xFF1A1A28;
@@ -60,6 +61,7 @@ public class ScrollablePackList extends AbstractWidget {
 		return Math.max(0, packs.size() * ITEM_HEIGHT - (height - 2));
 	}
 
+	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		if (!isMouseOver(mouseX, mouseY)) {
 			return false;
@@ -70,21 +72,61 @@ public class ScrollablePackList extends AbstractWidget {
 		return true;
 	}
 
+	@Override
 	public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent click, boolean doubled) {
 		double mouseX = click.x();
 		double mouseY = click.y();
-		if (!isMouseOver(mouseX, mouseY) || click.button() != 0) {
+		if (!isMouseOver(mouseX, mouseY) || !isValidClickButton(click.buttonInfo())) {
 			return false;
 		}
 		int innerX = (int) mouseX - getX();
-		int innerY = (int) mouseY - getY() + scrollOffset;
-		int idx = innerY / ITEM_HEIGHT;
-		if (idx >= 0 && idx < packs.size()) {
-			selected = packs.get(idx);
-			onSelect.accept(selected);
-			return true;
+		int innerW = getWidth() - SCROLLBAR_W - 1;
+		if (innerX >= 0 && innerX < innerW) {
+			int innerY = (int) mouseY - getY() + scrollOffset;
+			int idx = innerY / ITEM_HEIGHT;
+			if (idx >= 0 && idx < packs.size()) {
+				selected = packs.get(idx);
+				onSelect.accept(selected);
+				playDownSound(Minecraft.getInstance().getSoundManager());
+				return true;
+			}
+		} else if (innerX >= innerW) {
+			int max = getMaxScroll();
+			if (max > 0 && !packs.isEmpty()) {
+				int thumbH = Math.max(20, (int) ((height - 2) * ((float) (height - 2) / (packs.size() * ITEM_HEIGHT))));
+				double trackH = height - 2 - thumbH;
+				if (trackH > 0) {
+					double relY = mouseY - (getY() + 1) - thumbH / 2.0;
+					scrollOffset = (int) Math.max(0, Math.min(max, (relY / trackH) * max));
+					isScrolling = true;
+					return true;
+				}
+			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent click, double deltaX, double deltaY) {
+		if (isScrolling) {
+			int max = getMaxScroll();
+			if (max > 0 && !packs.isEmpty()) {
+				int thumbH = Math.max(20, (int) ((height - 2) * ((float) (height - 2) / (packs.size() * ITEM_HEIGHT))));
+				double trackH = height - 2 - thumbH;
+				if (trackH > 0) {
+					double relY = click.y() - (getY() + 1) - thumbH / 2.0;
+					scrollOffset = (int) Math.max(0, Math.min(max, (relY / trackH) * max));
+					return true;
+				}
+			}
+		}
+		return super.mouseDragged(click, deltaX, deltaY);
+	}
+
+	@Override
+	public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent click) {
+		isScrolling = false;
+		return super.mouseReleased(click);
 	}
 
 	@Override
